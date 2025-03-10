@@ -40,7 +40,7 @@ Built from scratchâ€”database design, synthetic data generation, and a sleek UIâ
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/crop-disease-tracker.git
+   git clone https://github.com/OforiPrescott/Crop-Disease-Tracker.git
    cd crop-disease-tracker
    
 2. Set Up Virtual Environments:
