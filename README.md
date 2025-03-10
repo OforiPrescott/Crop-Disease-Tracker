@@ -87,11 +87,13 @@ Built from scratchâ€”database design, synthetic data generation, and a sleek UIâ
 ## Disease Map
 
 ![Screenshot 2025-03-10 150209](https://github.com/user-attachments/assets/35247913-2cba-4da6-bff4-a413186100b1)
+
 Interactive map showing disease spread
 
 ## Severity 
 
 ![Screenshot 2025-03-10 150230](https://github.com/user-attachments/assets/b2dc42c7-b59f-4124-a4ef-fadc924880f7)
+
 Trend of Average Severity
 
 
