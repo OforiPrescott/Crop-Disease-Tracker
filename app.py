@@ -51,35 +51,11 @@ else:
         </style>
     """, unsafe_allow_html=True)
 
-# Database connection with fallback
-try:
-    engine = sa.create_engine('mssql+pyodbc://@PresHacks/AgriDiseaseDB?driver=SQL+Server&trusted_connection=yes')
-    st.write("Connected to SQL Server")
-except Exception as e:
-    st.warning("SQL Server connection failed. Using mock data for demo.")
-    # Mock data
-    farms_df = pd.DataFrame({
-        "farm_id": [1, 2, 3],
-        "farm_name": ["Farm_1", "Farm_2", "Farm_3"],
-        "latitude": [41.0, 41.1, 41.2],
-        "longitude": [-99.0, -98.9, -98.8]
-    })
-    disease_df = pd.DataFrame({
-        "report_id": [1, 2, 3],
-        "farm_id": [1, 2, 3],
-        "crop_id": [1, 2, 3],
-        "disease_name": ["Blight", "Rust", "Mildew"],
-        "report_date": pd.to_datetime(["2024-03-01", "2024-03-02", "2024-03-03"]),
-        "severity": [5, 7, 3],
-        "description": ["Yellow spots", "Wilting", "Gray patches"],
-        "latitude": [41.0, 41.1, 41.2],
-        "longitude": [-99.0, -98.9, -98.8],
-        "crop_type": ["Wheat", "Corn", "Soybean"]
-    })
-else:
-    # Load data from SQL Server
-    @st.cache_data(ttl=300)
-    def load_data():
+# Load data with fallback
+@st.cache_data(ttl=300)
+def load_data():
+    try:
+        engine = sa.create_engine('mssql+pyodbc://@PresHacks/AgriDiseaseDB?driver=SQL+Server&trusted_connection=yes')
         farms_df = pd.read_sql("SELECT * FROM Farms", engine)
         disease_df = pd.read_sql("""
             SELECT d.*, f.latitude, f.longitude, c.crop_type 
@@ -88,9 +64,32 @@ else:
             JOIN Crops c ON d.crop_id = c.crop_id
         """, engine)
         disease_df["report_date"] = pd.to_datetime(disease_df["report_date"])
-        return farms_df, disease_df
+        st.write("Connected to SQL Server")
+        return farms_df, disease_df, True  # True indicates DB connection
+    except Exception as e:
+        st.warning(f"Database connection failed: {str(e)}. Using mock data for demo.")
+        # Mock data
+        farms_df = pd.DataFrame({
+            "farm_id": [1, 2, 3],
+            "farm_name": ["Farm_1", "Farm_2", "Farm_3"],
+            "latitude": [41.0, 41.1, 41.2],
+            "longitude": [-99.0, -98.9, -98.8]
+        })
+        disease_df = pd.DataFrame({
+            "report_id": [1, 2, 3],
+            "farm_id": [1, 2, 3],
+            "crop_id": [1, 2, 3],
+            "disease_name": ["Blight", "Rust", "Mildew"],
+            "report_date": pd.to_datetime(["2024-03-01", "2024-03-02", "2024-03-03"]),
+            "severity": [5, 7, 3],
+            "description": ["Yellow spots", "Wilting", "Gray patches"],
+            "latitude": [41.0, 41.1, 41.2],
+            "longitude": [-99.0, -98.9, -98.8],
+            "crop_type": ["Wheat", "Corn", "Soybean"]
+        })
+        return farms_df, disease_df, False  # False indicates mock data
 
-    farms_df, disease_df = load_data()
+farms_df, disease_df, db_connected = load_data()
 
 # Header with logo and title
 col_logo, col_title = st.columns([1, 4])
@@ -151,11 +150,12 @@ with st.container():
         )
         st.plotly_chart(fig, use_container_width=True)
 
-# Report Form (disabled for demo if using mock data)
+# Report Form (enabled only if DB is connected)
 st.subheader("Submit Disease Report")
-if 'engine' in globals():
+if db_connected:
     with st.form("report_form"):
         farm_id = st.selectbox("Farm", farms_df["farm_id"].tolist())
+        engine = sa.create_engine('mssql+pyodbc://@PresHacks/AgriDiseaseDB?driver=SQL+Server&trusted_connection=yes')
         crops_df = pd.read_sql(f"SELECT crop_id, crop_type FROM Crops WHERE farm_id = {farm_id}", engine)
         crop_id = st.selectbox("Crop", crops_df["crop_id"].tolist(),
                                format_func=lambda x: crops_df[crops_df["crop_id"] == x]["crop_type"].values[0])
