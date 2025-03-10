@@ -45,22 +45,23 @@ Built from scratch—database design, synthetic data generation, and a sleek UI�
    
 2. Set Up Virtual Environments:
 - For Jupyter Notebook:
-  python -m venv notebook_env
-  notebook_env\Scripts\activate
-  pip install jupyter pandas numpy sqlalchemy
+     python -m venv notebook_env
+     notebook_env\Scripts\activate
+     pip install jupyter pandas numpy sqlalchemy
 
 - For Streamlit:
-  python -m venv streamlit_env
-  streamlit_env\Scripts\activate
-  pip install streamlit pandas sqlalchemy folium streamlit-folium plotly
+     python -m venv streamlit_env
+     streamlit_env\Scripts\activate
+     pip install -r requirements.txt
   
 3. Create Database:
-- Open SQL Server Management Studio (SSMS).
-- Run create_database.sql to set up AgriDiseaseDB.
+   - Open SQL Server Management Studio (SSMS).
+   - Run AgriDiseaseDB.sql to set up AgriDiseaseDB.
 
 4. Populate Data:
 - Activate notebook_env:
   notebook_env\Scripts\activate
+  
 - Open populate_data.ipynb in Jupyter:
   jupyter notebook
 
@@ -97,11 +98,19 @@ Interactive map showing disease spread
 Trend of Average Severity
 
 
+## Demo Notes
+The live demo on Streamlit Cloud uses mock data due to the SQL Server database not being accessible in the cloud environment. You’ll see a message:
 
+   Database connection failed: ... Using mock data for demo.
+- The map, trend chart, and filters work fully with mock data.
+- The reporting form is disabled in this mode.To enable full functionality (including reporting), set up a local SQL Server instance or
+  host the database on a cloud provider like Azure SQL (future enhancement).
+  
 ## Future Enhancements
 - Add ML models to predict disease spread.
 - Integrate generative AI for mitigation suggestions.
 - Support real farmer data via API.
+- Host the database in the cloud for full functionality.
 
 ## Contributing
 Feel free to fork, tweak, or suggest ideas! Open an issue or submit a pull request—I’d love to collaborate.
@@ -118,7 +127,10 @@ MIT License—use it, share it, build on it.
 
 
 ## Try It Out
-- Live Demo: Coming soon (Deployed URL TBD)
+- Live Demo: https://crop-disease-tracker-hplhecjyjamm2qtsvmkras.streamlit.app/
 - LinkedIn Article: Read the full story
   
 Questions? Thoughts? Drop a comment or connect with me on LinkedIn!
+
+
+
