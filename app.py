@@ -15,42 +15,6 @@ theme = st.sidebar.selectbox("Theme", ["Light", "Dark"], index=0)
 # Custom CSS for styling and responsiveness
 st.markdown("""
     <style>
-<<<<<<< HEAD
-    /* Main container */
-    .main {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 10px;
-    }
-    /* Title styling */
-    .stTitle {
-        font-family: 'Arial', sans-serif;
-        margin-top: 10px;
-    }
-    /* Subheader styling */
-    h2 {
-        font-family: 'Arial', sans-serif;
-    }
-    /* Form styling */
-    .stForm {
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    /* Button styling */
-    .stButton>button {
-        border-radius: 5px;
-    }
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .stTitle {
-            font-size: 24px;
-        }
-        .stColumn {
-            width: 100% !important;
-            margin-bottom: 20px;
-        }
-=======
     .main { max-width: 1200px; margin: 0 auto; padding: 10px; }
     .stTitle { font-family: 'Arial', sans-serif; margin-top: 10px; }
     h2 { font-family: 'Arial', sans-serif; }
@@ -59,7 +23,6 @@ st.markdown("""
     @media (max-width: 768px) {
         .stTitle { font-size: 24px; }
         .stColumn { width: 100% !important; margin-bottom: 20px; }
->>>>>>> 1ebdd85 (requirements.txt)
     }
     </style>
 """, unsafe_allow_html=True)
@@ -68,14 +31,7 @@ st.markdown("""
 if theme == "Dark":
     st.markdown("""
         <style>
-<<<<<<< HEAD
-        body {
-            background-color: #1E1E1E;
-            color: #E0E0E0;
-        }
-=======
         body { background-color: #1E1E1E; color: #E0E0E0; }
->>>>>>> 1ebdd85 (requirements.txt)
         .stTitle { color: #4CAF50; }
         h2 { color: #66BB6A; }
         .css-1d391kg { background-color: #2D2D2D; }
@@ -83,20 +39,10 @@ if theme == "Dark":
         .stButton>button { background-color: #4CAF50; color: white; }
         </style>
     """, unsafe_allow_html=True)
-<<<<<<< HEAD
-else:  # Light mode
-    st.markdown("""
-        <style>
-        body {
-            background-color: #FFFFFF;
-            color: #212121;
-        }
-=======
 else:
     st.markdown("""
         <style>
         body { background-color: #FFFFFF; color: #212121; }
->>>>>>> 1ebdd85 (requirements.txt)
         .stTitle { color: #2E7D32; }
         h2 { color: #388E3C; }
         .css-1d391kg { background-color: #F1F8E9; }
@@ -105,25 +51,6 @@ else:
         </style>
     """, unsafe_allow_html=True)
 
-<<<<<<< HEAD
-# Database connection
-engine = sa.create_engine('mssql+pyodbc://@PresHacks/AgriDiseaseDB?driver=SQL+Server&trusted_connection=yes')
-
-# Load data
-@st.cache_data(ttl=300)
-def load_data():
-    farms_df = pd.read_sql("SELECT * FROM Farms", engine)
-    disease_df = pd.read_sql("""
-        SELECT d.*, f.latitude, f.longitude, c.crop_type 
-        FROM DiseaseReports d
-        JOIN Farms f ON d.farm_id = f.farm_id
-        JOIN Crops c ON d.crop_id = c.crop_id
-    """, engine)
-    disease_df["report_date"] = pd.to_datetime(disease_df["report_date"])
-    return farms_df, disease_df
-
-farms_df, disease_df = load_data()
-=======
 # Database connection with fallback
 try:
     engine = sa.create_engine('mssql+pyodbc://@PresHacks/AgriDiseaseDB?driver=SQL+Server&trusted_connection=yes')
@@ -164,16 +91,11 @@ else:
         return farms_df, disease_df
 
     farms_df, disease_df = load_data()
->>>>>>> 1ebdd85 (requirements.txt)
 
 # Header with logo and title
 col_logo, col_title = st.columns([1, 4])
 with col_logo:
-<<<<<<< HEAD
-    st.image("gi-kace logo.jpg", width=150, caption="GI-KACE")  # Standard logo size
-=======
     st.image("gi-kace logo.jpg", width=150, caption="GI-KACE")
->>>>>>> 1ebdd85 (requirements.txt)
 with col_title:
     st.title("AI-Powered Crop Disease Tracker")
     st.markdown("Visualize and report crop diseases across farms in real-time.")
@@ -196,17 +118,9 @@ filtered_df = filtered_df[
     (filtered_df["report_date"] <= pd.to_datetime(date_range[1]))
 ]
 
-<<<<<<< HEAD
-# Main content in a container
-with st.container():
-    col1, col2 = st.columns([2, 1], gap="medium")
-
-    # Map
-=======
 # Main content
 with st.container():
     col1, col2 = st.columns([2, 1], gap="medium")
->>>>>>> 1ebdd85 (requirements.txt)
     with col1:
         st.subheader("Disease Map")
         m = folium.Map(location=[41.0, -99.0], zoom_start=6, 
@@ -221,11 +135,6 @@ with st.container():
                 fill_opacity=0.7
             ).add_to(m)
         st_folium(m, width=None, height=400, returned_objects=[])
-<<<<<<< HEAD
-
-    # Trend
-=======
->>>>>>> 1ebdd85 (requirements.txt)
     with col2:
         st.subheader("Severity Trend")
         trend_data = filtered_df.groupby("report_date")["severity"].mean().reset_index()
@@ -242,36 +151,6 @@ with st.container():
         )
         st.plotly_chart(fig, use_container_width=True)
 
-<<<<<<< HEAD
-# Report Form
-st.subheader("Submit Disease Report")
-with st.form("report_form"):
-    farm_id = st.selectbox("Farm", farms_df["farm_id"].tolist())
-    crops_df = pd.read_sql(f"SELECT crop_id, crop_type FROM Crops WHERE farm_id = {farm_id}", engine)
-    crop_id = st.selectbox("Crop", crops_df["crop_id"].tolist(),
-                           format_func=lambda x: crops_df[crops_df["crop_id"] == x]["crop_type"].values[0])
-    disease_name = st.text_input("Disease Name", max_chars=50)
-    severity = st.slider("Severity", 1, 10, 5)
-    description = st.text_area("Description", max_chars=255)
-    submitted = st.form_submit_button("Submit")
-    
-    if submitted:
-        with engine.connect() as conn:
-            conn.execute(sa.text("""
-                INSERT INTO DiseaseReports (farm_id, crop_id, disease_name, report_date, severity, description)
-                VALUES (:farm_id, :crop_id, :disease_name, :report_date, :severity, :description)
-            """), {
-                "farm_id": farm_id, "crop_id": crop_id, "disease_name": disease_name,
-                "report_date": datetime.now(), "severity": severity, "description": description
-            })
-            conn.commit()
-        st.success("Report submitted successfully!")
-        st.cache_data.clear()
-
-# Footer
-st.markdown("---")
-st.markdown("Built with ❤️ using Streamlit & SQL Server | Data refreshes every 5 minutes", unsafe_allow_html=True)
-=======
 # Report Form (disabled for demo if using mock data)
 st.subheader("Submit Disease Report")
 if 'engine' in globals():
@@ -302,4 +181,3 @@ else:
 # Footer
 st.markdown("---")
 st.markdown("Built with ❤️ using Streamlit & SQL Server | Data refreshes every 5 minutes")
->>>>>>> 1ebdd85 (requirements.txt)
