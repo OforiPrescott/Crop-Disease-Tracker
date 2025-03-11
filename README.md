@@ -128,7 +128,7 @@ MIT License—use it, share it, build on it.
 
 ## Try It Out
 - Live Demo: https://crop-disease-tracker-hplhecjyjamm2qtsvmkras.streamlit.app/
-- LinkedIn Article: Read the full story
+- LinkedIn Article: https://www.linkedin.com/pulse/tracking-crop-diseases-ai-my-journey-from-code-cloud-nyamekye-jueqf/
   
 Questions? Thoughts? Drop a comment or connect with me on LinkedIn!
 
